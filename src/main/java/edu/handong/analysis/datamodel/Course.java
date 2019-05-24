@@ -12,6 +12,20 @@ public class Course {
 	private int semesterCourseTaken;
 	
 	public Course(String line) {
+		String[] tempString;
+		
+		tempString = line.trim().split(",");
+		
+		studentId= tempString[0].trim();
+		yearMonthGraduated= tempString[1].trim();
+		firstMajor= tempString[2].trim();
+		secondMajor= tempString[3].trim();
+		courseCode= tempString[4].trim();
+		courseName= tempString[5].trim();
+		courseCredit= tempString[6].trim();
+		yearTaken= Integer.parseInt(tempString[7].trim());
+		semesterCourseTaken= Integer.parseInt(tempString[8].trim());
+		
 		
 	}
 	

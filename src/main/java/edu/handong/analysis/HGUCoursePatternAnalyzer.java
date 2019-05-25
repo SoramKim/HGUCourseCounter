@@ -59,12 +59,32 @@ public class HGUCoursePatternAnalyzer {
 		// TODO: Implement this method
 		students = new HashMap<String,Student>();
 		String tempStudentId;
+		Student student= null;
+		boolean exist;
+		
+		for(String line : lines) {
+			tempStudentId= line.trim().split(",")[0];
+			exist= students.containsKey(tempStudentId);
+			
+			if(exist== false) {
+				student = new Student(tempStudentId);
+				Course course = new Course(line);
+				student.addCourse(course);
+				
+				students.put(tempStudentId,student);
+			}
+			else {
+				Course course = new Course(line);
+				student.addCourse(course);
+			}
+			
+		}
 		
 		
 		
 		
 		
-		return null; // do not forget to return a proper variable.
+		return students; // do not forget to return a proper variable.
 	}
 
 	/**
@@ -85,7 +105,7 @@ public class HGUCoursePatternAnalyzer {
 		// TODO: Implement this method
 		ArrayList<String> linesToBeSaved = new ArrayList<String>();
 		
-		Collection collection = students.values();
+		Collection collection = sortedStudents.values();
 		Iterator iter = collection.iterator();
 		Student student;
 		
@@ -94,6 +114,10 @@ public class HGUCoursePatternAnalyzer {
 		int Semester;
 		int NumCoursesTakenInTheSemester;
 		String tempLine;
+		String head= "StudentID, TotalNumberOfSemestersRegistered, Semester, NumCoursesTakenInTheSemester";
+		linesToBeSaved.add(head);
+		
+		
 		
 		while(iter.hasNext()) {
 			student=(Student) iter.next();
@@ -103,12 +127,13 @@ public class HGUCoursePatternAnalyzer {
 				Semester=i; 
 				NumCoursesTakenInTheSemester=student.getNumCourseInNthSementer(Semester);
 				tempLine= studentId +","+ Integer.toString(TotalNumberOfSemestersRegistered)+","+Integer.toString(Semester)+","+Integer.toString(NumCoursesTakenInTheSemester);
+				linesToBeSaved.add(tempLine);
 			}
 			
 			
 			
 		}
 		
-		return null; // do not forget to return a proper variable.
+		return linesToBeSaved; // do not forget to return a proper variable.
 	}
 }

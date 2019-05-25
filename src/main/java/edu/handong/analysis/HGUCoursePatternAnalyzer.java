@@ -118,7 +118,6 @@ public class HGUCoursePatternAnalyzer {
 		linesToBeSaved.add(head);
 		
 		
-		
 		while(iter.hasNext()) {
 			student=(Student) iter.next();
 			studentId= student.getstudentId();

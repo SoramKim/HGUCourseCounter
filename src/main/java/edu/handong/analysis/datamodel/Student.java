@@ -29,8 +29,7 @@ public class Student {
 				semester++;
 			}
 			
-		}
-		
+		}	
 		return semestersByYearAndSemester;
 	}
 	

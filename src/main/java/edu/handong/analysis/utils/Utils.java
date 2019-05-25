@@ -52,9 +52,9 @@ public class Utils {
 			System.out.println("The file path does not exist. Please check your CLI argument!");
 			System.exit(0);	
 		}
-		for(String s: lines) {
+		for(String line: lines) {
 			try {
-				csvWriter.write(s);
+				csvWriter.write(line);
 				csvWriter.append("\n");
 			} catch (IOException e) {
 				e.getMessage();

@@ -1,7 +1,9 @@
 package edu.handong.analysis;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -56,6 +58,10 @@ public class HGUCoursePatternAnalyzer {
 		
 		// TODO: Implement this method
 		students = new HashMap<String,Student>();
+		String tempStudentId;
+		
+		
+		
 		
 		
 		return null; // do not forget to return a proper variable.
@@ -77,6 +83,31 @@ public class HGUCoursePatternAnalyzer {
 	private ArrayList<String> countNumberOfCoursesTakenInEachSemester(Map<String, Student> sortedStudents) {
 		
 		// TODO: Implement this method
+		ArrayList<String> linesToBeSaved = new ArrayList<String>();
+		
+		Collection collection = students.values();
+		Iterator iter = collection.iterator();
+		Student student;
+		
+		String studentId;
+		int TotalNumberOfSemestersRegistered;
+		int Semester;
+		int NumCoursesTakenInTheSemester;
+		String tempLine;
+		
+		while(iter.hasNext()) {
+			student=(Student) iter.next();
+			studentId= student.getstudentId();
+			TotalNumberOfSemestersRegistered= student.getSemestersByYearAndSemester().size();
+			for(int i=1; i<=TotalNumberOfSemestersRegistered;i++) {
+				Semester=i; 
+				NumCoursesTakenInTheSemester=student.getNumCourseInNthSementer(Semester);
+				tempLine= studentId +","+ Integer.toString(TotalNumberOfSemestersRegistered)+","+Integer.toString(Semester)+","+Integer.toString(NumCoursesTakenInTheSemester);
+			}
+			
+			
+			
+		}
 		
 		return null; // do not forget to return a proper variable.
 	}

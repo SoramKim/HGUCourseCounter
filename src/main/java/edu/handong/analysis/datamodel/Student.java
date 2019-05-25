@@ -48,5 +48,8 @@ public class Student {
 		}
 		return count;
 	}
+	public String getstudentId() {
+		return studentId;
+	}
 	
 }

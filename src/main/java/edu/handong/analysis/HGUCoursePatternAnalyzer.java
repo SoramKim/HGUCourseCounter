@@ -1,11 +1,14 @@
 package edu.handong.analysis;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+
+import org.apache.commons.cli.Options;
 
 import edu.handong.analysis.datamodel.Course;
 import edu.handong.analysis.datamodel.Student;
@@ -15,6 +18,15 @@ import edu.handong.analysis.utils.Utils;
 public class HGUCoursePatternAnalyzer {
 
 	private HashMap<String,Student> students;
+	
+	String input;
+	String output;
+	int analysis;
+	String coursecode;
+	int startyear;
+	int endyear;
+	boolean help;
+	
 	
 	/**
 	 * This method runs our analysis logic to save the number courses taken by each student per semester in a result file.
@@ -32,20 +44,47 @@ public class HGUCoursePatternAnalyzer {
 			System.exit(0);
 		}
 		
-		String dataPath = args[0]; // csv file to be analyzed
-		String resultPath = args[1]; // the file path where the results are saved.
-		ArrayList<String> lines = Utils.getLines(dataPath, true);
+		Options options = createOptions();
 		
-		students = loadStudentCourseRecords(lines);
-		
-		// To sort HashMap entries by key values so that we can save the results by student ids in ascending order.
-		Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
-		
-		// Generate result lines to be saved.
-		ArrayList<String> linesToBeSaved = countNumberOfCoursesTakenInEachSemester(sortedStudents);
-		
-		// Write a file (named like the value of resultPath) with linesTobeSaved.
-		Utils.writeAFile(linesToBeSaved, resultPath);
+		if(parseOptions(options, args)){
+			
+			String dataPath = input; // csv file to be analyzed
+			String resultPath = output; // the file path where the results are saved.
+			ArrayList<CSVRecord> lines = Utils.getLines(dataPath, true);
+			
+			
+			students = loadStudentCourseRecords(lines);
+			
+			// To sort HashMap entries by key values so that we can save the results by student ids in ascending order.
+			Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
+			
+			if (help){
+				printHelp(options);
+				return;
+			}
+			
+	
+			if(analysis == 1) {
+				
+				// Generate result lines to be saved.
+				ArrayList<String> linesToBeSaved = countNumberOfCoursesTakenInEachSemester(sortedStudents);
+				
+				// Write a file (named like the value of resultPath) with linesTobeSaved.
+				Utils.writeAFile(linesToBeSaved, resultPath);
+			
+			}
+			else if(analysis == 2) {
+				
+				// Write a file (named like the value of resultPath) with linesTobeSaved.
+				Utils.writeAFile(linesToBeSaved, resultPath);
+				
+			}
+			 
+		}
+	
+
+
+	
 	}
 	
 	/**

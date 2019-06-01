@@ -1,45 +1,41 @@
 package edu.handong.analysis.utils;
 
-import java.io.BufferedReader;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 public class Utils {
 	public static ArrayList<String> getLines(String file,boolean removeHeader){
-		ArrayList<String> lines = new ArrayList<String>();
-		String row;
-		BufferedReader csvReader= null;
+		ArrayList<CSVRecord> lines = new ArrayList<CSVRecord>();
+		CSVParser csvParser = null;
+		Reader csvReader= null;
 		
 		try {
-			csvReader = new BufferedReader(new FileReader(file));
-		} catch(FileNotFoundException e) {
+			csvReader = Files.new BufferedReader(Paths.get(file));
+			//header 어떻게 없애징
+			csvParser = new CSVParser(csvreader, CSVFormat.DEFAULT);
+		} catch(IOException e) {
 			System.out.println("The file path does not exist. Please check your CLI argument!");
 			System.exit(0);
 		}
+		
+		for(CSVRecord csvRecord : csvParser) {
+			lines.add(csvRecord);
+		}
+		
+		return lines;		
 
-		
-		if(removeHeader) {
-		    try {
-		    	csvReader.readLine();
-		    		
-		    } catch(IOException e) {
-		    		
-		    }
-		}
-		
-		try {
-			while ((row = csvReader.readLine()) != null) {  
-			    lines.add(row);
-			}
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-	
-		return lines;
-		
+
 	}
 		
 		
@@ -66,6 +62,7 @@ public class Utils {
 			csvWriter.flush();  
 			csvWriter.close();  
 		}catch(IOException e) {
+			e.getMessage();
 		
 		}
 		

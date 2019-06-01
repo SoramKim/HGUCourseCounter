@@ -14,6 +14,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.csv.CSVRecord;
 
 import edu.handong.analysis.datamodel.Course;
 import edu.handong.analysis.datamodel.Student;
@@ -109,27 +110,26 @@ public class HGUCoursePatternAnalyzer {
 		
 		for(CSVRecord line : lines) {
 			tempStudentId= line.get(0);
-			tempYear = line.get(7);
+			tempYear = Integer.parseInt(line.get(7));
 			
 			exist= students.containsKey(tempStudentId);
 			
-			if(exist== false) {
+			if(tempYear >= startyear && tempYear <= endyear) {
+				if(exist== false) {
 				student = new Student(tempStudentId);
 				Course course = new Course(line);
 				student.addCourse(course);
 				
 				students.put(tempStudentId,student);
-			}
-			else {
-				Course course = new Course(line);
-				student.addCourse(course);
+				}
+				else {
+					Course course = new Course(line);
+					student.addCourse(course);
+				}
+			
 			}
 			
 		}
-		
-		
-		
-		
 		
 		return students; // do not forget to return a proper variable.
 	}
@@ -183,6 +183,14 @@ public class HGUCoursePatternAnalyzer {
 		return linesToBeSaved; // do not forget to return a proper variable.
 	}
 }
+
+
+
+
+
+
+
+
 private boolean parseOptions(Options options, String[] args) {
 	CommandLineParser parser = new DefaultParser();
 
@@ -266,7 +274,9 @@ private Options createOptions() {
 	// add options by using OptionBuilder
 	options.addOption(Option.builder("h").longOpt("help")
 	        .desc("Show a Help page")
+	        //.hasArg()
 	        .argName("Help")
+			//.required()
 	        .build());
 	
 	return options;

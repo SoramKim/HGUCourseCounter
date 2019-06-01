@@ -15,15 +15,21 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 public class Utils {
-	public static ArrayList<String> getLines(String file,boolean removeHeader){
+	public static ArrayList<CSVRecord> getLines(String file,boolean removeHeader){
 		ArrayList<CSVRecord> lines = new ArrayList<CSVRecord>();
 		CSVParser csvParser = null;
 		Reader csvReader= null;
 		
 		try {
 			csvReader = Files.new BufferedReader(Paths.get(file));
-			//header 어떻게 없애징
-			csvParser = new CSVParser(csvreader, CSVFormat.DEFAULT);
+			if(removeHeader) {
+				csvParser = new CSVParser(csvReader, CSVFormat.DEFAULT.withSkipHeaderRecord().withFirstRecordAsHeader());
+			}
+			else {
+				csvParser = new CSVParser(csvReader, CSVFormat.DEFAULT);
+			}
+			//header 어떻게 없애징 이거 다시
+
 		} catch(IOException e) {
 			System.out.println("The file path does not exist. Please check your CLI argument!");
 			System.exit(0);

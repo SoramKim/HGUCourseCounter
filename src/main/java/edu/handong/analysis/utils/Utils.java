@@ -23,8 +23,8 @@ public class Utils {
 		try {
 			csvReader = Files.newBufferedReader(Paths.get(file));
 			if(removeHeader) {
-				csvParser = new CSVParser(csvReader, CSVFormat.DEFAULT.withSkipHeaderRecord().withFirstRecordAsHeader());
-			}//withIgnoreHeaderCase();
+				csvParser = new CSVParser(csvReader, CSVFormat.DEFAULT.withIgnoreHeaderCase().withFirstRecordAsHeader());
+			}
 	
 			else{
 				csvParser = new CSVParser(csvReader, CSVFormat.DEFAULT);

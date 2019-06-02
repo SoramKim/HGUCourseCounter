@@ -267,17 +267,17 @@ private HashMap<String, Integer> getNumberOfRegisteredStudents(Map<String, Stude
 	Iterator<Student> iter = collection.iterator();
 	Set<String> yearSemester = numberOfCourseTakenStudents.keySet();
 	Object[] yearSemesterArray = yearSemester.toArray();
-	for(Object o : yearSemesterArray) {
-		numberOfRegisteredStudents.put(o.toString(), 0);
+	for(Object a : yearSemesterArray) {
+		numberOfRegisteredStudents.put(a.toString(), 0);
 	}
 	
 	while(iter.hasNext()) {
 		student = iter.next();
 		student.getSemestersByYearAndSemester();
-		for(Object o : yearSemesterArray) {
-			if(student.isRegistered(o.toString())) {
-				numberOfStudents = numberOfRegisteredStudents.get(o.toString());
-				numberOfRegisteredStudents.replace(o.toString(), numberOfStudents+1);
+		for(Object a : yearSemesterArray) {
+			if(student.isRegistered(a.toString())) {
+				numberOfStudents = numberOfRegisteredStudents.get(a.toString());
+				numberOfRegisteredStudents.replace(a.toString(), numberOfStudents+1);
 			}
 		}
 	}

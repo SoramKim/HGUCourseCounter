@@ -50,6 +50,14 @@ public class Student {
 	public String getstudentId() {
 		return studentId;
 	}
-
+	public ArrayList<Course> getCoursesTaken(){
+		return coursesTaken;
+	}
+	public boolean isRegistered(String yearAndSemester) {
+		if(semestersByYearAndSemester.containsKey(yearAndSemester)) {
+			return true;
+		}
+		else return false;
+	}
 	
 }

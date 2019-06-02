@@ -1,4 +1,6 @@
-package edu.handong.analysis;
+package edu.handong.analysis.datamodel;
+
+import edu.handong.analysis.HGUCoursePatternAnalyzer;
 
 public class Main {
 	public static void main(String[] args) {

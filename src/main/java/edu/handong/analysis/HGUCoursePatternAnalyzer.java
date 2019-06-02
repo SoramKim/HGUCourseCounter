@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.cli.CommandLine;
@@ -81,6 +82,7 @@ public class HGUCoursePatternAnalyzer {
 			}
 			else if(analysis == 2) {
 				
+		
 				String year;
 				String semester;
 				String yearAndSemester;
@@ -89,8 +91,38 @@ public class HGUCoursePatternAnalyzer {
 				int numOfCourseTakenStudents;
 				int numOfRegisteredStudents;
 				double rate;
+				String rateString;
+				
+				HashMap<String, Integer> numberOfCourseTakenStudents;
+				HashMap<String, Integer> numberOfRegisteredStudents;
+				ArrayList<String> linesToBeSaved = new ArrayList<String>();
 				
 				courseCode = coursecode;
+				courseName = getCourseName(sortedStudents, courseCode);
+				
+
+				numberOfCourseTakenStudents = getNumberOfCourseTakenStudents(sortedStudents);
+				numberOfRegisteredStudents = getNumberOfRegisteredStudents(sortedStudents, numberOfCourseTakenStudents);
+				
+				Map<String, Integer> sortednumberOfCourseTakenStudents = new TreeMap<String, Integer>(numberOfCourseTakenStudents);
+				Map<String ,Integer> sortednumberOfRegisteredStudents = new TreeMap<String, Integer>(numberOfRegisteredStudents);
+				
+				Set<String> yearCoursesTaken = sortednumberOfCourseTakenStudents.keySet();
+				Object[] yearCoursesTakenArray = yearCoursesTaken.toArray();
+				linesToBeSaved.add("Year,Semester,CouseCode, CourseName,RegisteredStudents,TakenStudents,Rate");
+				
+				for(Object o : yearCoursesTakenArray) {
+					
+					yearAndSemester = o.toString();
+					year = yearAndSemester.trim().split("-")[0];
+					semester = yearAndSemester.trim().split("-")[1];
+					numOfCourseTakenStudents = sortednumberOfCourseTakenStudents.get(yearAndSemester);
+					numOfRegisteredStudents = sortednumberOfRegisteredStudents.get(yearAndSemester);
+					rate = (double) numOfCourseTakenStudents/ (double) numOfRegisteredStudents;
+					rateString = Double.toString(Math.round(rate*10)/10.0);
+					
+					linesToBeSaved.add(year + "," + semester + "," + courseCode + "," + courseName + "," + Integer.toString(numOfRegisteredStudents) + "," + Integer.toString(numOfCourseTakenStudents) + "," + rateString);
+				}
 				
 				// Write a file (named like the value of resultPath) with linesTobeSaved.
 				Utils.writeAFile(linesToBeSaved, resultPath);
@@ -186,16 +218,99 @@ public class HGUCoursePatternAnalyzer {
 				tempLine= studentId +","+ Integer.toString(TotalNumberOfSemestersRegistered)+","+Integer.toString(Semester)+","+Integer.toString(NumCoursesTakenInTheSemester);
 				linesToBeSaved.add(tempLine);
 			}
-			
-			
+				
 			
 		}
 		
-		return linesToBeSaved; // do not forget to return a proper variable.
-	}
+		return linesToBeSaved; 
 }
 
+private	HashMap<String, Integer> getNumberOfCourseTakenStudents(Map<String, Student> sortedStudents) {
+	HashMap<String, Integer> numberOfCourseTakenStudents = new HashMap<String, Integer>();
+	Student student = null;
+	ArrayList<Course> tempCoursesTaken;
+	int year;
+	int semester;
+	String yearAndSemester;
+	int numberOfStudents;
+	
+	Collection<Student> collection = sortedStudents.values();
+	Iterator<Student> iter = collection.iterator();
+	while(iter.hasNext()) {
+		student = iter.next();
+		tempCoursesTaken = student.getCoursesTaken();
+		for(Course c : tempCoursesTaken) {
+			if(coursecode.equals(c.getCourseCode())) {
+				year = c.getYearTaken();
+				semester = c.getSemesterCourseTaken();
+				yearAndSemester = Integer.toString(year) + "-" + Integer.toString(semester);
+				if(numberOfCourseTakenStudents.containsKey(yearAndSemester)) {
+					numberOfStudents = numberOfCourseTakenStudents.get(yearAndSemester);
+					numberOfCourseTakenStudents.replace(yearAndSemester, numberOfStudents+1);
+				}
+				else {
+					numberOfCourseTakenStudents.put(yearAndSemester, 1);
+				}
+			}
+		}
+	}
+	
+	return numberOfCourseTakenStudents;
+}
 
+private HashMap<String, Integer> getNumberOfRegisteredStudents(Map<String, Student> sortedStudents, HashMap<String, Integer> numberOfCourseTakenStudents){
+	HashMap<String, Integer> numberOfRegisteredStudents = new HashMap<String, Integer>();
+	Student student = null;
+	int numberOfStudents;
+	
+	Collection<Student> collection = sortedStudents.values();
+	Iterator<Student> iter = collection.iterator();
+	Set<String> yearSemester = numberOfCourseTakenStudents.keySet();
+	Object[] yearSemesterArray = yearSemester.toArray();
+	for(Object o : yearSemesterArray) {
+		numberOfRegisteredStudents.put(o.toString(), 0);
+	}
+	
+	while(iter.hasNext()) {
+		student = iter.next();
+		student.getSemestersByYearAndSemester();
+		for(Object o : yearSemesterArray) {
+			if(student.isRegistered(o.toString())) {
+				numberOfStudents = numberOfRegisteredStudents.get(o.toString());
+				numberOfRegisteredStudents.replace(o.toString(), numberOfStudents+1);
+			}
+		}
+	}
+	
+	return numberOfRegisteredStudents;
+}
+
+private String getCourseName(Map<String, Student> sortedStudents, String courseCode) {
+	String courseName = null;
+	Student student = null;
+	boolean exist = false;
+	ArrayList<Course> tempCourse = null;
+	
+	
+	Collection<Student> collection = sortedStudents.values();
+	Iterator<Student> iter = collection.iterator();
+	
+	while(iter.hasNext()){
+		student = iter.next();
+		tempCourse = student.getCoursesTaken();
+		
+		for(Course tempCourses : tempCourse) {
+			if(courseCode.equals(tempCourses.getCourseCode())){
+				courseName = tempCourses.getCourseName();
+				exist = true;
+				break;
+			}
+		}
+		if(exist == true) break;	
+	}
+	
+	return courseName;
+}
 
 
 
@@ -265,7 +380,7 @@ private Options createOptions() {
 			.desc("Course code for '-a 2' option")
 			.hasArg()
 			.argName("course code")
-			.required((analysis == 2))
+			.required(analysis == 2)
 			.build());
 	
 	// add options by using OptionBuilder
@@ -294,10 +409,12 @@ private Options createOptions() {
 	
 	return options;
 }
-private void printHelp(Options options) {
+  private void printHelp(Options options) {
 	// automatically generate the help statement
 	HelpFormatter formatter = new HelpFormatter();
 	String header = "HGU Course Analyzer";
-	String footer ="";
+	String footer = "";
 	formatter.printHelp("HGUCourseCounter", header, options, footer, true);
+  }
 }
+

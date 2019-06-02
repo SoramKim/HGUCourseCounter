@@ -21,10 +21,15 @@ public class Utils {
 		Reader csvReader= null;
 		
 		try {
-			csvReader = Files.new BufferedReader(Paths.get(file));
-			
-			csvParser = new CSVParser(csvReader, CSVFormat.DEFAULT.withSkipHeaderRecord().withFirstRecordAsHeader());
-			//header 어떻게 없애징 이거 다시
+			csvReader = Files.newBufferedReader(Paths.get(file));
+			if(removeHeader) {
+				csvParser = new CSVParser(csvReader, CSVFormat.DEFAULT.withSkipHeaderRecord().withFirstRecordAsHeader());
+			}//withIgnoreHeaderCase();
+	
+			else{
+				csvParser = new CSVParser(csvReader, CSVFormat.DEFAULT);
+			}
+		
 
 		} catch(IOException e) {
 			System.out.println("The file path does not exist. Please check your CLI argument!");

@@ -22,12 +22,8 @@ public class Utils {
 		
 		try {
 			csvReader = Files.new BufferedReader(Paths.get(file));
-			if(removeHeader) {
-				csvParser = new CSVParser(csvReader, CSVFormat.DEFAULT.withSkipHeaderRecord().withFirstRecordAsHeader());
-			}
-			else {
-				csvParser = new CSVParser(csvReader, CSVFormat.DEFAULT);
-			}
+			
+			csvParser = new CSVParser(csvReader, CSVFormat.DEFAULT.withSkipHeaderRecord().withFirstRecordAsHeader());
 			//header 어떻게 없애징 이거 다시
 
 		} catch(IOException e) {

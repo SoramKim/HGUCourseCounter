@@ -81,6 +81,17 @@ public class HGUCoursePatternAnalyzer {
 			}
 			else if(analysis == 2) {
 				
+				String year;
+				String semester;
+				String yearAndSemester;
+				String courseCode;
+				String courseName;
+				int numOfCourseTakenStudents;
+				int numOfRegisteredStudents;
+				double rate;
+				
+				courseCode = coursecode;
+				
 				// Write a file (named like the value of resultPath) with linesTobeSaved.
 				Utils.writeAFile(linesToBeSaved, resultPath);
 				
@@ -99,7 +110,7 @@ public class HGUCoursePatternAnalyzer {
 	 * @param lines
 	 * @return
 	 */
-	private HashMap<String,Student> loadStudentCourseRecords(ArrayList<String> lines) {
+	private HashMap<String,Student> loadStudentCourseRecords(ArrayList<CSVRecord> lines) {
 		
 		// TODO: Implement this method
 		students = new HashMap<String,Student>();
@@ -204,6 +215,8 @@ private boolean parseOptions(Options options, String[] args) {
 		
 		if(analysis == 2) {
 			coursecode = cmd.getOptionValue("c");
+			
+			
 		}
 		
 		startyear = Integer.parseInt(cmd.getOptionValue("s"));

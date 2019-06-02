@@ -239,6 +239,7 @@ private	HashMap<String, Integer> getNumberOfCourseTakenStudents(Map<String, Stud
 	while(iter.hasNext()) {
 		student = iter.next();
 		tempCoursesTaken = student.getCoursesTaken();
+		
 		for(Course c : tempCoursesTaken) {
 			if(coursecode.equals(c.getCourseCode())) {
 				year = c.getYearTaken();

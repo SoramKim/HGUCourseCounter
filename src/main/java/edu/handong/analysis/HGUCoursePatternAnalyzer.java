@@ -1,6 +1,5 @@
 package edu.handong.analysis;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -109,7 +108,7 @@ public class HGUCoursePatternAnalyzer {
 				
 				Set<String> yearCoursesTaken = sortednumberOfCourseTakenStudents.keySet();
 				Object[] yearCoursesTakenArray = yearCoursesTaken.toArray();
-				linesToBeSaved.add("Year,Semester,CouseCode, CourseName,RegisteredStudents,TakenStudents,Rate");
+				linesToBeSaved.add("Year,Semester,CouseCode,CourseName,RegisteredStudents,TakenStudents,Rate");
 				
 				for(Object o : yearCoursesTakenArray) {
 					
@@ -119,9 +118,9 @@ public class HGUCoursePatternAnalyzer {
 					numOfCourseTakenStudents = sortednumberOfCourseTakenStudents.get(yearAndSemester);
 					numOfRegisteredStudents = sortednumberOfRegisteredStudents.get(yearAndSemester);
 					rate = (double) numOfCourseTakenStudents/ (double) numOfRegisteredStudents;
-					rateString = Double.toString(Math.round(rate*10)/10.0);
+					rateString = Double.toString(Math.round(rate*10)/10.0);//소수점 한자리로 출력
 					
-					linesToBeSaved.add(year + "," + semester + "," + courseCode + "," + courseName + "," + Integer.toString(numOfRegisteredStudents) + "," + Integer.toString(numOfCourseTakenStudents) + "," + rateString);
+					linesToBeSaved.add(year + "," + semester + "," + courseCode + "," + courseName + "," + Integer.toString(numOfRegisteredStudents) + ","+ Integer.toString(numOfCourseTakenStudents) + "," + rateString);
 				}
 				
 				// Write a file (named like the value of resultPath) with linesTobeSaved.
@@ -212,6 +211,7 @@ public class HGUCoursePatternAnalyzer {
 			student=(Student) iter.next();
 			studentId= student.getstudentId();
 			TotalNumberOfSemestersRegistered= student.getSemestersByYearAndSemester().size();
+			
 			for(int i=1; i<=TotalNumberOfSemestersRegistered;i++) {
 				Semester=i; 
 				NumCoursesTakenInTheSemester=student.getNumCourseInNthSementer(Semester);
@@ -418,4 +418,3 @@ private Options createOptions() {
 	formatter.printHelp("HGUCourseCounter", header, options, footer, true);
   }
 }
-

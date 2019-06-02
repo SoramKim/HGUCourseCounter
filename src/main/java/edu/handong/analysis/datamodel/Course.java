@@ -25,7 +25,7 @@ public class Course {
 		semesterCourseTaken = Integer.parseInt(line.get(8));	
 		
 	}
-	
+
 	public String getStudentId() {
 		return studentId;
 	}
@@ -45,3 +45,4 @@ public class Course {
 		return courseName;
 	}
 }
+
